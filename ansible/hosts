@@ -1,0 +1,8 @@
+[all:vars]
+ansible_user = ansible
+
+[controller]
+picluster0
+
+[k3s_nodes]
+picluster0

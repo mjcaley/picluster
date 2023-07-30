@@ -1,0 +1,7 @@
+---
+- hosts: controller
+  tasks:
+  - name: Install k3s role
+    community.general.ansible_galaxy_install:
+      type: role
+      name: k3s.xanmanning
