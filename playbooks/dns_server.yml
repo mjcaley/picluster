@@ -1,0 +1,59 @@
+---
+- name: Setup DNS Server
+  hosts: controller
+  vars:
+    dnsmasq_config: /etc/dnsmasq.d/10-int.darkarctic.com.conf
+
+  tasks:
+  - name: Install dnsmasq
+    apt:
+      name: dnsmasq
+      update_cache: yes
+    become: true
+
+  - name: Touch dnsmasq config
+    file:
+      path: "{{ dnsmasq_config }}"
+      state: touch
+      access_time: preserve
+      modification_time: preserve
+      mode: u=rw,g=r,o=r
+      owner: root
+    become: true
+
+  - name: Write dnsmasq config
+    blockinfile:
+      path: "{{ dnsmasq_config }}"
+      block: |
+        domain-needed
+        no-dhcp-interface=eth0
+        expand-hosts
+        domain=int.darkarctic.com
+    become: true
+
+  - name: Write hosts
+    lineinfile:
+      path: /etc/hosts
+      state: present
+      regexp: '^192\.168\.86\.100 '
+      line: 192.168.86.100 picluster0 cluster
+
+  - name: Write nameservers
+    blockinfile:
+      path: /etc/resolv.conf
+      block: |
+        nameserver 8.8.8.8
+        nameserver 8.8.4.4
+    become: true
+
+  - name: Disable resolved
+    systemd:
+      name: systemd-resolved
+      enabled: no
+      state: stopped
+
+  - name: Enable dnsmasq
+    systemd:
+      name: dnsmasq
+      enabled: yes
+      state: started
