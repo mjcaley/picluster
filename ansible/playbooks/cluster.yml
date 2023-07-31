@@ -15,6 +15,10 @@
       ./get_helm.sh
     become: true
 
+  - name: Install kubernetes client
+    ansible.builtin.pip:
+      name: kubernetes
+
   - name: Download upgrade controller manifest
     ansible.builtin.get_url:
       url: https://github.com/rancher/system-upgrade-controller/releases/latest/download/system-upgrade-controller.yaml
