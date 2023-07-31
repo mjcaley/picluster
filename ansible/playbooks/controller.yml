@@ -6,4 +6,3 @@
     community.general.ansible_galaxy_install:
       type: role
       name: xanmanning.k3s
-    become: true
