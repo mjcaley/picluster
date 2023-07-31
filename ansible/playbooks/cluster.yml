@@ -31,6 +31,7 @@
     kubernetes.core.k8s:
       state: present
       src: ~/system-upgrade-controller.yaml
+      kubeconfig: /etc/rancher/k3s/k3s.yaml
 
   - name: Add Longhorn repository
     kubernetes.core.helm_repository:
