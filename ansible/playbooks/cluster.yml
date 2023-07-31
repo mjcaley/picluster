@@ -4,6 +4,7 @@
     k3s_release_version: stable
     k3s_install_hard_links: true
     k3s_become: true
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
   roles:
   - role: xanmanning.k3s
 
@@ -31,7 +32,7 @@
     kubernetes.core.k8s:
       state: present
       src: ~/system-upgrade-controller.yaml
-      kubeconfig: /etc/rancher/k3s/k3s.yaml
+      kubeconfig: "{{ kubeconfig }}"
 
   - name: Add Longhorn repository
     kubernetes.core.helm_repository:
@@ -44,4 +45,4 @@
       chart_ref: longhorn/longhorn
       release_namespace: longhorn-system
       create_namespace: true
-      kubeconfig: /etc/rancher/k3s/k3s.yaml
+      kubeconfig: "{{ kubeconfig }}"
