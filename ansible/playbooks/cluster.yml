@@ -16,9 +16,10 @@
     become: true
 
   - name: Install kubernetes client
-    ansible.builtin.pip:
-      name: kubernetes
-      extra_args: --user
+    ansible.builtin.apt:
+      name: python3-kubernetes
+      update_cache: true
+    become: true
 
   - name: Download upgrade controller manifest
     ansible.builtin.get_url:
