@@ -18,6 +18,7 @@
   - name: Install kubernetes client
     ansible.builtin.pip:
       name: kubernetes
+      extra_args: --user
 
   - name: Download upgrade controller manifest
     ansible.builtin.get_url:
