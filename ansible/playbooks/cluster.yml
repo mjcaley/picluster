@@ -43,4 +43,5 @@
       name: longhorn
       chart_ref: longhorn/longhorn
       release_namespace: longhorn-system
+      create_namespace: true
       kubeconfig: /etc/rancher/k3s/k3s.yaml
