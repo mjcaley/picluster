@@ -1,8 +1,16 @@
-[all:vars]
-ansible_user = ansible
+---
+all:
+  vars:
+    ansible_user: ansible
+  hosts:
+    picluster0:
 
-[controller]
-picluster0
+  controller:
+    picluster0:
 
-[k3s_nodes]
-picluster0
+  k3s_cluster:
+    vars:
+      k3s_server:
+        write-kubeconfig-mode: "0644"
+    picluster0:
+      k3s_control_node: true
