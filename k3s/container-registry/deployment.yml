@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: container-registry
+  namespace: container-registry
+  labels:
+    app: container-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: container-registry
+  template:
+    metadata:
+      labels:
+        app: container-registry
+        name: container-registry
+    spec:
+      volumes:
+      - name: container-registry-vol
+        persistentVolumeClaim:
+          claimName: container-registry-vol
+      containers:
+      - name: registry
+        image: registry:2
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: container-registry-vol
+          mountPath: /var/lib/registry
