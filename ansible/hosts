@@ -1,0 +1,20 @@
+---
+all:
+  vars:
+    ansible_user: ansible
+  
+  hosts:
+    picluster0:
+
+  children:
+    controller:
+      hosts:
+        picluster0:
+
+    k3s_cluster:
+      vars:
+        k3s_server:
+          write-kubeconfig-mode: "0644"
+      hosts:
+        picluster0:
+          k3s_control_node: true
