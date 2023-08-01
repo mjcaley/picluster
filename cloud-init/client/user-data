@@ -1,0 +1,22 @@
+hostname: picluster2
+fqdn: picluster2.int.almostauto.com
+prefer_fqdn_over_hostname: true
+
+groups:
+- ansible
+
+users:
+- name: admin
+  groups: users,adm,dialout,audio,netdev,video,plugdev,cdrom,games,input,gpio,spi,i2c,render,sudo
+  shell: /bin/bash
+  lock_passwd: true
+  passwd: $5$0wl6IiiG1d$g9bpWxMEeVbIAz1/OZeu671p4NCuUVOiDWEpcWJmOZ0
+  ssh_authorized_keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGRaG8l5sJk13x2Hrz98zpHv71NkGo4VZsmsxf6frZ0x ead\6104522@TR-5X039Y2
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC9TFnW8MWwgfX9TAaPrUe41q7fXZPeqYXjaxayKP4djqtR3XFirVtEhz40i6CK/orq3X3+c7D7yJttI5y/X7vMThBt5SNi5dzUJ55A1enKrqXw3xj2g14uvBHTcKd8Lk4MX1VXehqEEqs216eC6VXa7QaSE9HdvAk6dyD/o2s0eh3WxHTKB/irThi+dYL3alsjfYyg4HhVwHWVoEIINPE0sETbY65dRMb4Yq89Frh0VV4Y+rr2gPrwZzQ60Bzx7AS/KSpYVjJIF2dN2WIGUnfQnUeNeQrJMikaafEpawdCWImjpk7VCIrxZvbzt1TDCZHBDDe6EiBycEnzODWrfu6rZEzbgKWp7rpF3//msjWxGkzl3P0r36ChXpEOkO3B/1W/XyO++xIYZuEVnYZITiMHzBb/4QZ/akosQuVj7wayxuiEZiVjRFKa0ISIKGxIgRi3JSa+BlqdBn1RkAM6JJSKvU1jZFORBADhwdI7JvKUWm84Ge7iRVj8GJplfiX1/Qt6cE6kyACZS3I6kwg7jzdmhBoJUfvYDNN449mUQ7JRtLu0k92484r81JVme4cti6sqMYDIxBqelsMtPPqMs8Si+51VoKwlMj+pmVEf/uTvNLlDPjvTBuR2kuu6+OrqI417n7H5mTaXyrMPnqgJw83De9/HSbmbk2m7sLePrZ5KLQ== ead\6104522@TR-5X039Y2
+  sudo: ALL=(ALL) NOPASSWD:ALL
+- name: ansible
+  gecos: Ansible User
+  shell: /bin/bash
+  groups: users,admin,wheel,ansible
+  sudo: ALL=(ALL) NOPASSWD:ALL
