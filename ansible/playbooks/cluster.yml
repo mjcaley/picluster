@@ -46,3 +46,11 @@
       release_namespace: longhorn-system
       create_namespace: true
       kubeconfig: "{{ kubeconfig }}"
+  
+  - name: Install MetalLB
+    kubernetes.core.k8s:
+      state: present
+      src: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.3/config/manifests/metallb-native.yaml
+
+  - name: Configure MetalLB
+    

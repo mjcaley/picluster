@@ -1,5 +1,5 @@
-hostname: picluster0
-fqdn: picluster0.int.almostauto.com
+hostname: picluster1
+fqdn: picluster1.int.almostauto.com
 prefer_fqdn_over_hostname: true
 
 groups:
@@ -21,12 +21,14 @@ users:
   groups: users,admin,wheel,ansible
   sudo: ALL=(ALL) NOPASSWD:ALL
 
+ssh_pwauth: true
+
 package_update: true
 package_upgrade: true
 packages:
 - git
 - python3-pip
-- ansible
+- pipx
 
 ansible:
   install_method: pip

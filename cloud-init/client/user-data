@@ -1,5 +1,5 @@
-hostname: picluster2
-fqdn: picluster2.int.almostauto.com
+hostname: picluster1
+fqdn: picluster1.int.almostauto.com
 prefer_fqdn_over_hostname: true
 
 groups:
