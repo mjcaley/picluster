@@ -1,0 +1,62 @@
+---
+- hosts: k3s_cluster
+  vars:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+  tasks:
+  - name: Install kubernetes client
+    ansible.builtin.apt:
+      name: python3-kubernetes
+      update_cache: true
+    become: true
+  
+  - name: MetalLB
+    kubernetes.core.k8s:
+      apply: true
+      src: https://raw.githubusercontent.com/metallb/metallb/v0.14.3/config/manifests/metallb-native.yaml
+      kubeconfig: "{{ kubeconfig }}"
+  
+  - name: MetalLB address pools
+    kubernetes.core.k8s:
+      src: ./metallb.yml
+      kubeconfig: "{{ kubeconfig }}"
+
+  - name: Longhorn
+    kubernetes.core.k8s:
+      apply: true
+      src: https://raw.githubusercontent.com/longhorn/longhorn/v1.6.0/deploy/longhorn.yaml
+      kubeconfig: "{{ kubeconfig }}"
+
+  - name: Create temporary build directory
+    ansible.builtin.tempfile:
+      state: directory
+      suffix: build
+    register: prometheus_kube
+
+  - name: Checkout prometheus-kube
+    ansible.builtin.git:
+      repo: 'https://github.com/prometheus-operator/kube-prometheus.git'
+      dest: '{{ prometheus_kube }}'
+      version: release-0.22
+    
+  - name: Install Prometheus CRDs
+    kubernetes.core.k8s:
+      src: '{{ prometheus_kube }}/manifests/setup'
+      apply: true
+      server_side_apply:
+        field_manager: ansible
+      wait: true
+      wait_condition:
+        type: CustomResourceDefinition
+        status: Established
+      namespace: monitoring
+    
+  - name: Install Prometheus CRDs
+    kubernetes.core.k8s:
+      src: '{{ prometheus_kube }}/manfiests'
+      apply: true
+  
+  - name: Cloud Native PostgreSQL operator
+    kubernetes.core.k8s:
+      apply: true
+      src: https://raw.githubusercontent.com/metallb/metallb/v0.14.3/config/manifests/metallb-native.yaml
