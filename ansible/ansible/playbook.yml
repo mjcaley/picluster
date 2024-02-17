@@ -1,0 +1,8 @@
+---
+- hosts: controller
+
+  tasks:
+  - name: Install k3s role
+    community.general.ansible_galaxy_install:
+      type: both
+      requirements_file: requirements.yml
