@@ -5,6 +5,7 @@ all:
   
   hosts:
     picluster0:
+    picluster1:
 
   children:
     controller:
@@ -18,3 +19,4 @@ all:
       hosts:
         picluster0:
           k3s_control_node: true
+        picluster1:
