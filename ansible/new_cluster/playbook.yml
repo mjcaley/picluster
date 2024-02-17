@@ -17,43 +17,51 @@
   
   - name: MetalLB
     kubernetes.core.k8s:
-      state: present
       apply: true
       src: https://raw.githubusercontent.com/metallb/metallb/v0.14.3/config/manifests/metallb-native.yaml
+      kubeconfig: "{{ kubeconfig }}"
   
   - name: MetalLB address pools
     kubernetes.core.k8s:
-      state: present
       src: ./metallb.yml
+      kubeconfig: "{{ kubeconfig }}"
 
   - name: Longhorn
     kubernetes.core.k8s:
-      state: present
       apply: true
       src: https://raw.githubusercontent.com/longhorn/longhorn/v1.6.0/deploy/longhorn.yaml
-  
-  - name: Prometheus operator
-    kubernetes.core.k8s:
-      state: present
-      apply: true
-      server_side_apply:
-        field_manager: ansible
-      src: https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/master/bundle.yaml
+      kubeconfig: "{{ kubeconfig }}"
+
+  - name: Create temporary build directory
+    ansible.builtin.tempfile:
+      state: directory
+      suffix: build
+    register: prometheus_kube
 
   - name: Checkout prometheus-kube
     ansible.builtin.git:
       repo: 'https://github.com/prometheus-operator/kube-prometheus.git'
-      dest: /srv/checkout
+      dest: '{{ prometheus_kube }}'
       version: release-0.22
-
-  - name: Prometheus server
+    
+  - name: Install Prometheus CRDs
     kubernetes.core.k8s:
-      state: present
+      src: '{{ prometheus_kube }}/manifests/setup'
       apply: true
-      src: ./prometheus.yml
-  
-  - name: Cloud Native PostgreSQL
+      server_side_apply:
+        field_manager: ansible
+      wait: true
+      wait_condition:
+        type: CustomResourceDefinition
+        status: Established
+      namespace: monitoring
+    
+  - name: Install Prometheus CRDs
     kubernetes.core.k8s:
-      state: present
+      src: '{{ prometheus_kube }}/manfiests'
+      apply: true
+  
+  - name: Cloud Native PostgreSQL operator
+    kubernetes.core.k8s:
       apply: true
       src: https://raw.githubusercontent.com/metallb/metallb/v0.14.3/config/manifests/metallb-native.yaml
