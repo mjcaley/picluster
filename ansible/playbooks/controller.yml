@@ -5,4 +5,9 @@
   - name: Install k3s role
     community.general.ansible_galaxy_install:
       type: role
-      name: xanmanning.k3s
+      name: xanmanning.k3s:344
+
+  - name: Install Kubernetes collection
+    community.general.ansible_galaxy_install:
+      type: collection
+      name: kubernetescore:2.4.0
