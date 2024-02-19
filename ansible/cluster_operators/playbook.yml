@@ -47,8 +47,7 @@
         field_manager: ansible
       wait: true
       wait_condition:
-        type: CustomResourceDefinition
-        status: Established
+        type: Established
       namespace: monitoring
     
   - name: Install Prometheus CRDs
