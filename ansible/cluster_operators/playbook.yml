@@ -49,13 +49,16 @@
       wait_condition:
         type: Established
       namespace: monitoring
+      kubeconfig: "{{ kubeconfig }}"
     
-  - name: Install Prometheus CRDs
+  - name: Install Prometheus
     kubernetes.core.k8s:
-      src: '{{ prometheus_kube }}/manfiests'
+      src: '{{ prometheus_kube }}/manifests'
       apply: true
+      kubeconfig: "{{ kubeconfig }}"
   
   - name: Cloud Native PostgreSQL operator
     kubernetes.core.k8s:
       apply: true
       src: https://raw.githubusercontent.com/metallb/metallb/v0.14.3/config/manifests/metallb-native.yaml
+      kubeconfig: "{{ kubeconfig }}"
