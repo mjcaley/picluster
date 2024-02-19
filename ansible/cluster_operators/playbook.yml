@@ -25,6 +25,11 @@
       src: https://raw.githubusercontent.com/longhorn/longhorn/v1.6.0/deploy/longhorn.yaml
       kubeconfig: "{{ kubeconfig }}"
 
+  - name: Longhorn UI service
+    kubernetes.core.k8s:
+      src: "{{ playbook_dir }}/longhorn.yml"
+      kubeconfig: "{{ kubeconfig }}"
+
   - name: Container registry
     kubernetes.core.k8s:
       src: "{{ playbook_dir }}/registry.yml"
