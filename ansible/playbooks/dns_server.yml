@@ -37,6 +37,7 @@
       state: present
       regexp: '^192\.168\.86\.100 '
       line: 192.168.86.100 picluster0 picluster0.int.darkarctic.com
+    become: true
 
   - name: Write hosts - picluster1
     lineinfile:
@@ -44,6 +45,7 @@
       state: present
       regexp: '^192\.168\.86\.101 '
       line: 192.168.86.101 picluster1 picluster1.int.darkarctic.com
+    become: true
 
   - name: Write hosts - registry.int.darkarctic.com
     lineinfile:
@@ -51,6 +53,7 @@
       state: present
       regexp: '^192\.168\.10\.10 '
       line: 192.168.10.100 registry.int.darkarctic.com
+    become: true
 
   - name: Write nameservers
     blockinfile:
