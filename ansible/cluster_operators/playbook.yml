@@ -12,7 +12,6 @@
   
   - name: MetalLB
     kubernetes.core.k8s:
-      apply: true
       src: https://raw.githubusercontent.com/metallb/metallb/v0.14.3/config/manifests/metallb-native.yaml
       kubeconfig: "{{ kubeconfig }}"
   
@@ -23,39 +22,45 @@
 
   - name: Longhorn
     kubernetes.core.k8s:
-      apply: true
       src: https://raw.githubusercontent.com/longhorn/longhorn/v1.6.0/deploy/longhorn.yaml
       kubeconfig: "{{ kubeconfig }}"
 
-  - name: Create temporary build directory
-    ansible.builtin.tempfile:
-      state: directory
-      suffix: build
-    register: prometheus_kube
+  - name: Container registry
+    kubernetes.core.k8s:
+      src: "{{ playbook_dir }}/registry.yml"
+      kubeconfig: "{{ kubeconfig }}"
 
-  - name: Checkout prometheus-kube
-    ansible.builtin.git:
-      repo: 'https://github.com/prometheus-operator/kube-prometheus.git'
-      dest: '{{ prometheus_kube.path }}'
-      single_branch: true
-      version: release-0.13
+  # - name: Create temporary build directory
+  #   ansible.builtin.tempfile:
+  #     state: directory
+  #     suffix: build
+  #   register: prometheus_kube
+
+  # - name: Checkout prometheus-kube
+  #   ansible.builtin.git:
+  #     repo: 'https://github.com/prometheus-operator/kube-prometheus.git'
+  #     dest: '{{ prometheus_kube.path }}'
+  #     single_branch: true
+  #     version: release-0.13
     
-  - name: Install Prometheus CRDs
-    kubernetes.core.k8s:
-      src: '{{ prometheus_kube.path }}/manifests/setup'
-      apply: true
-      server_side_apply:
-        field_manager: ansible
-      kubeconfig: "{{ kubeconfig }}"
+  # - name: Install Prometheus CRDs
+  #   kubernetes.core.k8s:
+  #     src: '{{ prometheus_kube.path }}/manifests/setup/'
+  #     apply: true
+  #     server_side_apply:
+  #       field_manager: ansible
+  #     kubeconfig: "{{ kubeconfig }}"
     
-  - name: Install Prometheus
-    kubernetes.core.k8s:
-      src: '{{ prometheus_kube.path }}/manifests'
-      apply: true
-      kubeconfig: "{{ kubeconfig }}"
+  # - name: Install Prometheus
+  #   kubernetes.core.k8s:
+  #     src: '{{ prometheus_kube.path }}/manifests/'
+  #     apply: true
+  #     kubeconfig: "{{ kubeconfig }}"
   
   - name: Cloud Native PostgreSQL operator
     kubernetes.core.k8s:
       apply: true
       src: https://raw.githubusercontent.com/metallb/metallb/v0.14.3/config/manifests/metallb-native.yaml
       kubeconfig: "{{ kubeconfig }}"
+
+
