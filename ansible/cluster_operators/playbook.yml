@@ -36,13 +36,13 @@
   - name: Checkout prometheus-kube
     ansible.builtin.git:
       repo: 'https://github.com/prometheus-operator/kube-prometheus.git'
-      dest: '{{ prometheus_kube }}'
+      dest: '{{ prometheus_kube.path }}'
       single_branch: true
       version: release-0.13
     
   - name: Install Prometheus CRDs
     kubernetes.core.k8s:
-      src: '{{ prometheus_kube }}/manifests/setup'
+      src: '{{ prometheus_kube.path }}/manifests/setup'
       apply: true
       server_side_apply:
         field_manager: ansible
@@ -50,7 +50,7 @@
     
   - name: Install Prometheus
     kubernetes.core.k8s:
-      src: '{{ prometheus_kube }}/manifests'
+      src: '{{ prometheus_kube.path }}/manifests'
       apply: true
       kubeconfig: "{{ kubeconfig }}"
   
