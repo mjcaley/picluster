@@ -5,4 +5,4 @@
   - name: Install k3s role
     community.general.ansible_galaxy_install:
       type: both
-      requirements_file: "{playbook_dir}/requirements.yml"
+      requirements_file: "{{ playbook_dir }}/requirements.yml"
