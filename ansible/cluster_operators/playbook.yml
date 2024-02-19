@@ -37,7 +37,7 @@
     ansible.builtin.git:
       repo: 'https://github.com/prometheus-operator/kube-prometheus.git'
       dest: '{{ prometheus_kube }}'
-      version: release-0.22
+      version: release-0.13
     
   - name: Install Prometheus CRDs
     kubernetes.core.k8s:
