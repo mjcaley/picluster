@@ -45,10 +45,6 @@
       apply: true
       server_side_apply:
         field_manager: ansible
-      wait: true
-      wait_condition:
-        type: Established
-      namespace: monitoring
       kubeconfig: "{{ kubeconfig }}"
     
   - name: Install Prometheus
