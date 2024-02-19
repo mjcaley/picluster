@@ -18,7 +18,7 @@
   
   - name: MetalLB address pools
     kubernetes.core.k8s:
-      src: ./metallb.yml
+      src: "{{ playbook_dir }}/metallb.yml"
       kubeconfig: "{{ kubeconfig }}"
 
   - name: Longhorn
