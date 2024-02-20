@@ -1,0 +1,47 @@
+---
+- hosts: k3s_cluster
+  vars:
+    k3s_release_version: stable
+    k3s_install_hard_links: true
+    k3s_become: true
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+  roles:
+  - role: xanmanning.k3s
+
+  tasks:
+  - name: Install kubernetes client
+    ansible.builtin.apt:
+      name: python3-kubernetes
+      update_cache: true
+    become: true
+
+  - name: Upgrade controller
+    kubernetes.core.k8s:
+      src: https://github.com/rancher/system-upgrade-controller/releases/latest/download/system-upgrade-controller.yaml
+      kubeconfig: "{{ kubeconfig }}"
+    run_once: true
+  
+  - name: MetalLB
+    kubernetes.core.k8s:
+      src: https://raw.githubusercontent.com/metallb/metallb/v0.14.3/config/manifests/metallb-native.yaml
+      kubeconfig: "{{ kubeconfig }}"
+    run_once: true
+  
+  - name: Longhorn
+    kubernetes.core.k8s:
+      src: https://raw.githubusercontent.com/longhorn/longhorn/v1.6.0/deploy/longhorn.yaml
+      kubeconfig: "{{ kubeconfig }}"
+    run_once: true
+
+  - name: Container registry
+    kubernetes.core.k8s:
+      src: "{{ playbook_dir }}/registry.yml"
+      kubeconfig: "{{ kubeconfig }}"
+    run_once: true
+  
+  - name: Cloud Native PostgreSQL operator
+    kubernetes.core.k8s:
+      apply: true
+      src: https://raw.githubusercontent.com/metallb/metallb/v0.14.3/config/manifests/metallb-native.yaml
+      kubeconfig: "{{ kubeconfig }}"
+    run_once: true

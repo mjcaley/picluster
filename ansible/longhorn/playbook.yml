@@ -1,0 +1,24 @@
+---
+- hosts: k3s_cluster
+  vars:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+  tasks:
+  - name: Longhorn UI service
+    kubernetes.core.k8s:
+      definition:
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: longhorn-ui
+          namespace: longhorn-system
+          annotations:
+            metallb.universe.tf/loadBalancerIPs: 192.168.10.101
+        spec:
+          selector:
+            app: longhorn-ui
+          ports:
+          - port: 80
+            targetPort: 8000
+      kubeconfig: "{{ kubeconfig }}"
+    run_once: true
