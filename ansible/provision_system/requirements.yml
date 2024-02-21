@@ -6,4 +6,8 @@ roles:
 collections:
   - name: kubernetes.core
     version: "2.4.0"
+  - name: ansible.eda
+    version: "1.4.5"
+  - name: sabre1041.eda
+    version: "1.0.1"
     
