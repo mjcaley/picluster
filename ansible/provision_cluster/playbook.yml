@@ -20,7 +20,7 @@
       kubeconfig: "{{ kubeconfig }}"
     run_once: true
   
-  - name: k3s upgrade
+  - name: k3s upgrade plans
     kubernetes.core.k8s:
       src: "{{ playbook_dir }}/upgrade.yml"
       kubeconfig: "{{ kubeconfig }}"
@@ -28,7 +28,7 @@
 
   - name: cert-manager
     kubernetes.core.k8s:
-      src: kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.2/cert-manager.yaml
+      src: https://github.com/cert-manager/cert-manager/releases/download/v1.14.2/cert-manager.yaml
       kubeconfig: "{{ kubeconfig }}"
     run_once: true
   
