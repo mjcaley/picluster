@@ -17,6 +17,11 @@ all:
         kubeconfig: /etc/rancher/k3s/k3s.yaml
         k3s_server:
           write-kubeconfig-mode: "0644"
+        k3s_registries:
+          mirrors:
+            registry.int.darkarctic.com:
+              endpoint:
+              - https://registry.int.darkarctic.com/v2
       hosts:
         picluster0:
           k3s_control_node: true
