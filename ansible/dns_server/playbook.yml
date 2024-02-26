@@ -14,6 +14,7 @@
   
   - name: Extract CoreDNS
     ansible.builtin.unarchive:
+      remote_src: true
       src: https://github.com/coredns/coredns/releases/download/v1.11.1/coredns_1.11.1_linux_arm64.tgz
       dest: /usr/bin/
       mode: '0755'
