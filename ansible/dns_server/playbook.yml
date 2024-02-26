@@ -87,9 +87,9 @@
       create: true
     become: true
 
-  - name: Enable dnsmasq
+  - name: Start CoreDNS
     ansible.builtin.systemd_service:
-      name: dnsmasq
+      name: coredns
       enabled: yes
       state: stopped
     become: true
