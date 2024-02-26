@@ -10,6 +10,7 @@
       name: coredns
       create_home: false
       password: '!'
+    become: true
   
   - name: Extract CoreDNS
     ansible.builtin.unarchive:
@@ -87,6 +88,7 @@
       name: dnsmasq
       enabled: yes
       state: stopped
+    become: true
 
   # - name: Install dnsmasq
   #   apt:
