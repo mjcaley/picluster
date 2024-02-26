@@ -81,6 +81,10 @@
 
         [Install]
         WantedBy=multi-user.target
+      owner: root
+      group: root
+      mode: "0644"
+      create: true
     become: true
 
   - name: Enable dnsmasq
