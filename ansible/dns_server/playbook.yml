@@ -128,3 +128,4 @@
       name: systemd-resolved
       enabled: no
       state: stopped
+    become: true
