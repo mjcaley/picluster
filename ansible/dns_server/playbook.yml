@@ -34,6 +34,10 @@
       path: /etc/coredns/Corefile
       block: |
         . {
+          hosts {
+            picluster0.int.darkarctic.com  picluster0
+            picluster1.int.darkarctic.com  picluster1
+          }
           forward . /etc/resolv.conf
           reload
           whoami
@@ -53,17 +57,10 @@
             }
         }
 
-        int.darkarctic.com:53 test.almostauto.com:53 {
+        test.almostauto.com:53 {
             k8s_gateway {
               kubeconfig /etc/rancher/k3s/k3s.yaml
             }
-        }
-
-        cluster.local:53 {
-          kubernetes {
-            kubeconfig /etc/rancher/k3s/k3s.yaml
-            endpoint https://127.0.0.1:6443
-          }
         }
       mode: '0644'
       owner: root
