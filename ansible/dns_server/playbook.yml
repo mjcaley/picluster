@@ -12,10 +12,10 @@
       password: '!'
     become: true
   
-  - name: Extract CoreDNS
+  - name: Extract CoreDNS w/ k8s_gateway plugin
     ansible.builtin.unarchive:
       remote_src: true
-      src: https://github.com/coredns/coredns/releases/download/v1.11.1/coredns_1.11.1_linux_arm64.tgz
+      src: https://github.com/ori-edge/k8s_gateway/releases/download/v0.4.0/k8s_gateway_0.4.0_linux_arm64.tar.gz
       dest: /usr/bin/
       mode: '0755'
       owner: root
@@ -34,12 +34,36 @@
       path: /etc/coredns/Corefile
       block: |
         . {
-          fowrard . /etc/resolv.conf
+          forward . /etc/resolv.conf
           reload
+          whoami
+          log
+          errors
+          cache 30
+        }
+
+        int.darkarctic.com:53 {
+            hosts {
+              192.168.10.100  picluster0
+              192.168.10.101  picluster1
+              fallthrough
+            }
+            k8s_gateway {
+              kubeconfig /etc/rancher/k3s/k3s.yaml
+            }
+        }
+
+        int.darkarctic.com:53 test.almostauto.com:53 {
+            k8s_gateway {
+              kubeconfig /etc/rancher/k3s/k3s.yaml
+            }
+        }
+
+        cluster.local:53 {
           kubernetes {
             kubeconfig /etc/rancher/k3s/k3s.yaml
+            endpoint https://127.0.0.1:6443
           }
-          log
         }
       mode: '0644'
       owner: root
@@ -94,56 +118,6 @@
       state: stopped
     become: true
 
-  # - name: Install dnsmasq
-  #   apt:
-  #     name: dnsmasq
-  #     update_cache: yes
-  #   become: true
-
-  # - name: Touch dnsmasq config
-  #   file:
-  #     path: "{{ dnsmasq_config }}"
-  #     state: touch
-  #     access_time: preserve
-  #     modification_time: preserve
-  #     mode: u=rw,g=r,o=r
-  #     owner: root
-  #   become: true
-
-  # - name: Write dnsmasq config
-  #   blockinfile:
-  #     path: "{{ dnsmasq_config }}"
-  #     block: |
-  #       domain-needed
-  #       no-dhcp-interface=eth0
-  #       expand-hosts
-  #       domain=int.darkarctic.com
-  #   become: true
-
-  # - name: Write hosts - picluster0
-  #   lineinfile:
-  #     path: /etc/hosts
-  #     state: present
-  #     regexp: '^192\.168\.86\.100 '
-  #     line: 192.168.86.100 picluster0 picluster0.int.darkarctic.com
-  #   become: true
-
-  # - name: Write hosts - picluster1
-  #   lineinfile:
-  #     path: /etc/hosts
-  #     state: present
-  #     regexp: '^192\.168\.86\.101 '
-  #     line: 192.168.86.101 picluster1 picluster1.int.darkarctic.com
-  #   become: true
-
-  # - name: Write hosts - registry.int.darkarctic.com
-  #   lineinfile:
-  #     path: /etc/hosts
-  #     state: present
-  #     regexp: '^192\.168\.10\.10 '
-  #     line: 192.168.10.100 registry.int.darkarctic.com
-  #   become: true
-
   - name: Write nameservers
     blockinfile:
       path: /etc/resolv.conf
@@ -156,10 +130,4 @@
     systemd:
       name: systemd-resolved
       enabled: no
-      state: stopped
-
-  - name: Enable dnsmasq
-    systemd:
-      name: dnsmasq
-      enabled: yes
       state: stopped
