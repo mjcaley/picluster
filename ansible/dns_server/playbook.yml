@@ -8,7 +8,7 @@
     args:
       removes: /etc/resolv.conf
     when:
-    - "'/etc/resolv.conf' is not ansible.builtin.link_exists"
+    # - "'/etc/resolv.conf' is not ansible.builtin.link_exists"
     - "'/etc/resolv.conf' is ansible.builtin.exists"
     become: true
 
