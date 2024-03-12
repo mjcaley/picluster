@@ -135,14 +135,6 @@
       state: stopped
     become: true
 
-  - name: Write nameservers
-    blockinfile:
-      path: /etc/resolv.conf
-      block: |
-        nameserver 8.8.8.8
-        nameserver 8.8.4.4
-    become: true
-
   - name: Disable resolved
     systemd:
       name: systemd-resolved
