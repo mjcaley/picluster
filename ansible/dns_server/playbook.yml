@@ -1,10 +1,16 @@
 ---
 - name: Setup DNS Server
   hosts: all
-  vars:
-    dnsmasq_config: /etc/dnsmasq.d/10-int.darkarctic.com.conf
 
   tasks:
+  - name: Write hosts
+    ansible.builtin.blockinfile:
+      path: /etc/hosts
+      block: |
+        192.168.86.100 picluster0
+        192.168.86.101 picluster1
+    become: true
+
   - name: CoreDNS user
     ansible.builtin.user:
       name: coredns
