@@ -60,7 +60,7 @@
             picluster0.int.darkarctic.com  picluster0
             picluster1.int.darkarctic.com  picluster1
           }
-          forward . /etc/resolv.conf
+          forward . 8.8.8.8 8.8.4.4
           reload
           whoami
           log
