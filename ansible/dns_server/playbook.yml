@@ -40,11 +40,7 @@
       path: /etc/coredns/Corefile
       block: |
         . {
-          hosts {
-            picluster0.int.darkarctic.com  picluster0
-            picluster1.int.darkarctic.com  picluster1
-          }
-          forward . 8.8.8.8 8.8.4.4
+          forward . 8.8.8.8:53 8.8.4.4:53
           reload
           whoami
           log
