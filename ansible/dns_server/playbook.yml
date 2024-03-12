@@ -8,12 +8,12 @@
     args:
       removes: /etc/resolv.conf
     when:
-    # - "'/etc/resolv.conf' is not ansible.builtin.link_exists"
+    - "'/etc/resolv.conf' is not ansible.builtin.link"
     - "'/etc/resolv.conf' is ansible.builtin.exists"
     become: true
 
   - name: Create /etc/resolv.conf link
-    ansible.builtin.shell: ln -s /usr/bin/systemd/resolv.conf /etc/resolv.conf
+    ansible.builtin.shell: ln -s /usr/lib/systemd/resolv.conf /etc/resolv.conf
     args:
       creates: /ets/resolv.conf
     when: "'/etc/resolv.conf' is not ansible.builtin.exists"
