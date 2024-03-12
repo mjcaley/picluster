@@ -3,6 +3,16 @@
   hosts: all
 
   tasks:
+  - name: Remove /etc/resolv.conf
+    ansible.builtin.shell: rm /etc/resolv.conf
+      removes: /etc/resolv.conf
+    when: "{{ '/etc/resolv.conf' is not link}}"
+
+  - name: Create /etc/resolv.conf link
+    ansible.builtin.shell: ln -s /usr/bin/systemd/resolv.conf /etc/resolv.conf
+      creates: /ets/resolv.conf
+    when: "{{ '/etc/resolv.conf' is exist}}"
+
   - name: Write hosts
     ansible.builtin.blockinfile:
       path: /etc/hosts
