@@ -7,13 +7,15 @@
     ansible.builtin.shell: rm /etc/resolv.conf
     args:
       removes: /etc/resolv.conf
-    when: "{{ '/etc/resolv.conf' is not link}}"
+    when: "'/etc/resolv.conf' is not link"
+    become: true
 
   - name: Create /etc/resolv.conf link
     ansible.builtin.shell: ln -s /usr/bin/systemd/resolv.conf /etc/resolv.conf
     args:
       creates: /ets/resolv.conf
-    when: "{{ '/etc/resolv.conf' is exist}}"
+    when: "'/etc/resolv.conf' is exist"
+    become: true
 
   - name: Write hosts
     ansible.builtin.blockinfile:
