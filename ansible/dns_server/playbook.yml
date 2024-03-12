@@ -7,7 +7,9 @@
     ansible.builtin.shell: rm /etc/resolv.conf
     args:
       removes: /etc/resolv.conf
-    when: "'/etc/resolv.conf' is not ansible.builtin.link_exists and '/etc/resolv.conf' is ansible.builtin.exists"
+    when:
+    - "'/etc/resolv.conf' is not ansible.builtin.link_exists"
+    - "'/etc/resolv.conf' is ansible.builtin.exists"
     become: true
 
   - name: Create /etc/resolv.conf link
@@ -132,12 +134,5 @@
     ansible.builtin.systemd_service:
       name: coredns
       enabled: yes
-      state: stopped
-    become: true
-
-  - name: Disable resolved
-    systemd:
-      name: systemd-resolved
-      enabled: no
       state: stopped
     become: true
