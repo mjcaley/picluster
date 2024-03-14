@@ -54,8 +54,6 @@ kind: Service
 metadata:
   name: registry
   namespace: registry
-  annotations:
-    metallb.universe.tf/loadBalancerIPs: 192.168.10.100
 spec:
   selector:
     app: registry
@@ -65,3 +63,67 @@ spec:
       protocol: TCP
       port: 5000
       targetPort: 5000
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: digitalocean-dns
+  namespace: registry
+data:
+  access-token: "ZG9wX3YxX2ZiMjg2N2IyOWRhM2VjYzNhODg1Mzc1YzkzMzJkZDY1NmM3NWNjZWZkNzMyMWUxZWQxNTkyMjVkMzZiNzVlNzY="
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: issuer
+  namespace: registry
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: mjcaley@darkarctic.com
+    privateKeySecretRef:
+      name: registry-issuer
+    solvers:
+    - dns01:
+        digitalocean:
+          tokenSecretRef:
+            name: digitalocean-dns
+            key: access-token
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: registry-int-darkarctic-com
+  namespace: registry
+spec:
+  secretName: registry-int-darkarctic-com-tls
+  issuerRef:
+    name: issuer
+  dnsNames:
+  - 'registry.int.darkarctic.com'
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: registry
+  namespace: registry
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: registry.int.darkarctic.com
+  labels:
+    name: registry
+spec:
+  rules:
+  - host: registry.int.darkarctic.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: registry
+            port:
+              number: 5000
+  tls:
+  - hosts:
+    - registry.int.darkarctic.com
+    secretName: registry-int-darkarctic-com-tls

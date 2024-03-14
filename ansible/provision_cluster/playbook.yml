@@ -37,10 +37,26 @@
       src: https://raw.githubusercontent.com/metallb/metallb/v0.14.3/config/manifests/metallb-native.yaml
       kubeconfig: "{{ kubeconfig }}"
     run_once: true
-  
+
+  # https://longhorn.io/kb/troubleshooting-volume-with-multipath/
+  - name: Disable multipath for Longhorn
+    ansible.builtin.blockinfile:
+      path: /etc/multipath.conf
+      block: |
+        blacklist {
+            devnode "^sd[a-z0-9]+"
+        }
+    become: true
+
   - name: Longhorn
     kubernetes.core.k8s:
       src: https://raw.githubusercontent.com/longhorn/longhorn/v1.6.0/deploy/longhorn.yaml
+      kubeconfig: "{{ kubeconfig }}"
+    run_once: true
+
+  - name: Sealed secrets
+    kubernetes.core.k8s:
+      src: https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.26.0/controller.yaml
       kubeconfig: "{{ kubeconfig }}"
     run_once: true
 
